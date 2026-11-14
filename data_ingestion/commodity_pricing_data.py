@@ -1,4 +1,3 @@
-
 import uuid
 import os
 import numpy as np
@@ -22,7 +21,7 @@ markets = [
 ]
 records = []
 today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
-for _ in range(100):
+for _ in range(500):
     commodity = np.random.choice(list(commodities.keys()))
     market_id, city, lat, lon = markets[np.random.randint(len(markets))]
     demand = np.random.choice(["LOW", "MEDIUM", "HIGH"], p=[0.25, 0.50, 0.25])
@@ -65,7 +64,7 @@ try:
             PRICE_ID VARCHAR(50),
             PRICE_TIMESTAMP TIMESTAMP_NTZ,
             COMMODITY_NAME VARCHAR(100),
-            MARKET_ID VARCHAR(50),
+            MARKET_ID VARCHAR(50) PRIMARY KEY,
             MARKET_NAME VARCHAR(100),
             CITY VARCHAR(100),
             COUNTRY VARCHAR(100),

@@ -3,10 +3,12 @@ import random
 import time
 from datetime import datetime, timezone, timedelta
 from kafka import KafkaProducer
+from commodity_pricing_data import markets
 
 class ContainerSimulator:
-    def __init__(self, container_id, cargo_name, original_value, target_temp_c, drift_threshold_c, dest_latitude, dest_longitude):
+    def __init__(self, container_id, cargo_name, original_value, target_temp_c, drift_threshold_c, dest_latitude, dest_longitude, market_ids):
         self.container_id = container_id
+        self.market_id = random.choice(market_ids)
         self.cargo_name = cargo_name
         self.original_value = original_value
 
@@ -129,6 +131,7 @@ class ContainerSimulator:
             "schema_version": self.schema_version,
             "timestamp": timestamp,
             "container_id": self.container_id,
+            "market_id": self.market_id,
             "cargo_name": self.cargo_name,
             "original_value": self.original_value,
             "latitude": round(self.latitude, 4),
@@ -194,6 +197,8 @@ class ContainerSimulator:
 
 if __name__ == "__main__":
 
+    market_ids = [market[0] for market in markets]
+
     producer = KafkaProducer(
         bootstrap_servers="localhost:9092",
         value_serializer=lambda v: json.dumps(v).encode("utf-8")
@@ -208,11 +213,12 @@ if __name__ == "__main__":
         target_temp_c=1.0,
         drift_threshold_c=1.0,
         dest_latitude=19.0760,
-        dest_longitude=72.8777
+        dest_longitude=72.8777,
+        market_ids=market_ids
     )
 
-    DURATION_MINUTES = 1
-    EVENT_INTERVAL_SECONDS = 2
+    DURATION_MINUTES = 5
+    EVENT_INTERVAL_SECONDS = 1
 
     try:
         simulator.run_simulation(

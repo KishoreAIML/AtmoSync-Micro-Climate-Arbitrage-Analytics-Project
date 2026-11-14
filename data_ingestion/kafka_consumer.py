@@ -30,7 +30,7 @@ print("Kafka connected!")
 
 insert_query = """
     INSERT INTO CONTAINERS_DATABASE.PUBLIC.CONTAINER_EVENTS (
-        EVENT_ID, SCHEMA_VERSION, TIMESTAMP, CONTAINER_ID,
+        EVENT_ID, MARKET_ID, SCHEMA_VERSION, TIMESTAMP, CONTAINER_ID,
         CARGO_NAME, ORIGINAL_VALUE, LATITUDE, LONGITUDE,
         DEST_LAT, DEST_LON, SPEED_KNOTS, COMPRESSOR_FAILED,
         HOURS_IN_TRANSIT, TARGET_TEMP_C, AMBIENT_TEMP_C,
@@ -42,7 +42,7 @@ insert_query = """
         DOOR_OPEN, PRESSURE_HPA
     )
     VALUES (
-        %s, %s, TO_TIMESTAMP_TZ(%s)::TIMESTAMP_NTZ,
+        %s,%s, %s, TO_TIMESTAMP_TZ(%s)::TIMESTAMP_NTZ,
         %s, %s, %s, %s, %s, %s, %s, %s, %s,
         %s, %s, %s, %s, %s, %s, %s, %s, %s,
         %s, %s, %s, %s, %s, %s, %s, %s, %s,
@@ -56,6 +56,7 @@ try:
         try:
             event_values = (
                 event.get("event_id"),
+                event.get("market_id"),
                 event.get("schema_version"),
                 event.get("timestamp"),
                 event.get("container_id"),
