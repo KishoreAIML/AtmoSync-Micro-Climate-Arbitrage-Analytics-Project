@@ -1,0 +1,12 @@
+
+version: 2
+
+sources:
+  - name: raw
+    database: CONTAINERS_DATABASE
+    schema: PUBLIC
+
+    tables:
+      - name: CONTAINER_EVENTS
+
+      - name: MOCK_COMMODITY_PRICING
